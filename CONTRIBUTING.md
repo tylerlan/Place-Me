@@ -4,10 +4,10 @@
 - Team members work on their own forks, and make branches from dev with features they are working on. 
 - Only one team member at a time can be working on their feature branch.
  
-## Merging feature branches to dev (these do not have to be PRs, unless we are working remotely)
+## Merging feature branches to dev 
 - When the tests pulled down from dev are passing on your branch, you can merge changes (or submit a PR) onto dev.
 - In order to merge a feature into dev, it must pass all of the tests on dev. 
-- Team members should check in with each other before doing a merge.
+- Team members should check in with each other before doing a merge. (these do not have to be PRs, unless we are working remotely).
  
 ## Merging dev branch to master (these will be PRs)
 - Merge dev to master when we have an MVP, after our merges to dev from our separate feature branches have gone through and there are no merge conflicts or anything on dev. 

@@ -6,23 +6,40 @@ const knex = require("../knex");
 const addDatabaseHooks = func => {
   return function(...args) {
     beforeEach(done => {
+      console.log("before");
       knex.migrate
-        .rollback()
-        .then(() => {
-          return knex.migrate.latest();
-        })
+        .latest()
+        // .then(() => {
+        //   return knex.migrate.latest();
+        // })
         .then(() => {
           return knex.seed.run();
         })
+        .catch(err => {
+          console.log("ERR ERR");
+          if (err.routine !== "DropErrorMsgNonExistent") {
+            throw err;
+          }
+        })
         .finally(() => {
+          console.log("before done");
           done();
         });
     });
 
     afterEach(done => {
-      knex.migrate.rollback().finally(() => {
-        done();
-      });
+      console.log("after");
+      knex.migrate
+        .rollback()
+        .catch(err => {
+          if (err.routine !== "DropErrorMsgNonExistent") {
+            throw err;
+          }
+        })
+        .finally(() => {
+          console.log("after done");
+          done();
+        });
     });
 
     return func(...args);

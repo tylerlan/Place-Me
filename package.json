@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "coverage": "istanbul cover _mocha -- -R spec",
-    "test": "mocha"
+    "test": "knex migrate:rollback --env test && knex migrate:latest --env test && mocha"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,19 @@
+{
+  "name": "place-me",
+  "version": "1.0.0",
+  "description": "The API takes a location and returns pictures and their data that were taken near the input location. It will also allow the user to store their favorite pictures, and add comments and ratings.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tylerlan/Place-Me.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tylerlan/Place-Me/issues"
+  },
+  "homepage": "https://github.com/tylerlan/Place-Me#readme"
+}

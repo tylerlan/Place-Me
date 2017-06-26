@@ -19,19 +19,19 @@ suite(
             {
               user_id: 1,
               username: "Ronan",
-              hashed_password:
-                "deawbopjjifogzepgksvpocqcwvpskjcxvvrqfscghwmwrhvwhdznfemaapk"
+              hashed_password: "deawbopjjifogzepgksvpocqcwvpskjcxvvrqfscghwmwrhvwhdznfemaapk"
+            },
+            {
+              user_id: 2,
+              username: "Tyler",
+              hashed_password: "jqpzovmzzryiopemglqgusdihbexftypqdkridddpfdhzdprkbxioxapoyju"
             }
           ];
 
           /* eslint-enable max-len */
 
           for (let i = 0; i < expected.length; i++) {
-            assert.deepEqual(
-              actual[i],
-              expected[i],
-              `Row id=${i + 1} not the same`
-            );
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
           }
 
           done();
@@ -57,11 +57,7 @@ suite(
           /* eslint-enable max-len */
 
           for (let i = 0; i < expected.length; i++) {
-            assert.deepEqual(
-              actual[i],
-              expected[i],
-              `Row id=${i + 1} not the same`
-            );
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
           }
 
           done();
@@ -88,11 +84,7 @@ suite(
           /* eslint-enable max-len */
 
           for (let i = 0; i < expected.length; i++) {
-            assert.deepEqual(
-              actual[i],
-              expected[i],
-              `Row id=${i + 1} not the same`
-            );
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
           }
 
           done();
@@ -119,11 +111,7 @@ suite(
           /* eslint-enable max-len */
 
           for (let i = 0; i < expected.length; i++) {
-            assert.deepEqual(
-              actual[i],
-              expected[i],
-              `Row id=${i + 1} not the same`
-            );
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
           }
 
           done();

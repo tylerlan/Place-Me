@@ -38,11 +38,7 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(
-              actual[column],
-              expected[column],
-              `Column ${column} is not the same`
-            );
+            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
           }
 
           done();
@@ -94,11 +90,7 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(
-              actual[column],
-              expected[column],
-              `Column ${column} is not the same`
-            );
+            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
           }
 
           done();
@@ -136,11 +128,7 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(
-              actual[column],
-              expected[column],
-              `Column ${column} is not the same`
-            );
+            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
           }
 
           done();
@@ -185,11 +173,7 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(
-              actual[column],
-              expected[column],
-              `Column ${column} is not the same`
-            );
+            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
           }
 
           done();
@@ -234,11 +218,7 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(
-              actual[column],
-              expected[column],
-              `Column ${column} is not the same`
-            );
+            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
           }
 
           done();

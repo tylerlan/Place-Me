@@ -7,10 +7,12 @@ exports.up = function(knex, Promise) {
       .inTable("users")
       .onDelete("cascade")
       .notNullable();
-    table.text("url").notNullable();
-    table.text("tags").notNullable();
-    table.text("lat").notNullable();
-    table.text("lng").notNullable();
+    table
+      .integer("picture_id")
+      .references("picture_id")
+      .inTable("pictures")
+      .onDelete("cascade")
+      .notNullable();
   });
 };
 

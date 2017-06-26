@@ -8,9 +8,9 @@ exports.up = function(knex, Promise) {
       .onDelete("cascade")
       .notNullable();
     table
-      .integer("favorite_id")
-      .references("favorite_id")
-      .inTable("favorites")
+      .integer("picture_id")
+      .references("picture_id")
+      .inTable("pictures")
       .onDelete("cascade")
       .notNullable();
     table.integer("rating").notNullable();

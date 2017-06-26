@@ -38,7 +38,11 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
+            assert.deepEqual(
+              actual[column],
+              expected[column],
+              `Column ${column} is not the same`
+            );
           }
 
           done();
@@ -48,30 +52,16 @@ suite(
         });
     });
 
-    test("favorites columns", done => {
-      knex("favorites")
+    test("pictures columns", done => {
+      knex("pictures")
         .columnInfo()
         .then(actual => {
           let expected = {
-            favorite_id: {
+            picture_id: {
               type: "integer",
               maxLength: null,
               nullable: false,
-              defaultValue: "nextval('favorites_favorite_id_seq'::regclass)"
-            },
-
-            user_id: {
-              type: "integer",
-              maxLength: null,
-              nullable: false,
-              defaultValue: null
-            },
-
-            rating_id: {
-              type: "integer",
-              maxLength: null,
-              nullable: false,
-              defaultValue: null
+              defaultValue: "nextval('pictures_picture_id_seq'::regclass)"
             },
 
             url: {
@@ -104,7 +94,53 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
+            assert.deepEqual(
+              actual[column],
+              expected[column],
+              `Column ${column} is not the same`
+            );
+          }
+
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
+    });
+
+    test("favorites columns", done => {
+      knex("favorites")
+        .columnInfo()
+        .then(actual => {
+          let expected = {
+            favorite_id: {
+              type: "integer",
+              maxLength: null,
+              nullable: false,
+              defaultValue: "nextval('favorites_favorite_id_seq'::regclass)"
+            },
+
+            user_id: {
+              type: "integer",
+              maxLength: null,
+              nullable: false,
+              defaultValue: null
+            },
+
+            picture_id: {
+              type: "integer",
+              maxLength: null,
+              nullable: false,
+              defaultValue: null
+            }
+          };
+
+          for (let column in expected) {
+            assert.deepEqual(
+              actual[column],
+              expected[column],
+              `Column ${column} is not the same`
+            );
           }
 
           done();
@@ -133,7 +169,7 @@ suite(
               defaultValue: null
             },
 
-            favorite_id: {
+            picture_id: {
               type: "integer",
               maxLength: null,
               nullable: false,
@@ -149,7 +185,11 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
+            assert.deepEqual(
+              actual[column],
+              expected[column],
+              `Column ${column} is not the same`
+            );
           }
 
           done();
@@ -178,7 +218,7 @@ suite(
               defaultValue: null
             },
 
-            favorite_id: {
+            picture_id: {
               type: "integer",
               maxLength: null,
               nullable: false,
@@ -194,7 +234,11 @@ suite(
           };
 
           for (let column in expected) {
-            assert.deepEqual(actual[column], expected[column], `Column ${column} is not the same`);
+            assert.deepEqual(
+              actual[column],
+              expected[column],
+              `Column ${column} is not the same`
+            );
           }
 
           done();

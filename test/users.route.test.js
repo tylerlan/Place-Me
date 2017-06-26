@@ -8,7 +8,7 @@ const knex = require("../knex");
 const server = require("../index");
 
 suite("users route", () => {
-  test("GET /users", done => {
+  test("GET /users/", done => {
     request(server)
       .get("/users")
       .set("Accept", "application/json")
@@ -49,13 +49,12 @@ suite("users route", () => {
       );
   });
 
-  test("POST /users/:user_id", done => {
+  test("POST /users/", done => {
     request(server)
-      .put("/users/3")
+      .post("/users/")
       .set("Accept", "application/json")
       .send({
-        username: "Angela",
-        hashed_password: "zwvehnnlzbwalucidzmbwaqyeamvjiffhdrxqezhrzmbmpacpjwqpajerdqk"
+        username: "Angela"
       })
       .expect("Content-Type", /json/)
       .expext(
@@ -63,12 +62,54 @@ suite("users route", () => {
         [
           {
             user_id: 3,
-            username: "Angela",
-            hashed_password: "zwvehnnlzbwalucidzmbwaqyeamvjiffhdrxqezhrzmbmpacpjwqpajerdqk"
+            username: "Angela"
           }
         ],
         done
       );
+  });
+
+  test("POST /users/", done => {
+    request(server)
+      .post("/users")
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .send({
+        username: "Cornelius",
+        password: "passwordsareformuggles"
+      })
+      .expect(200, {
+        user_id: 4,
+        username: "Cornelius"
+      })
+      .expect("Content-Type", /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        knex("users")
+          .where("id", 4)
+          .first()
+          .then(newUser => {
+            let hashedPassword = newUser.hashed_password;
+
+            delete newUser.hashed_password;
+
+            assert.deepEqual(newUser, {
+              id: 4,
+              username: "Cornelius"
+            });
+
+            const passwordsMatch = bcrypt.compareSync(password, hashedPassword);
+
+            assert.isTrue(passwordsMatch, "Passwords do not match");
+            done();
+          })
+          .catch(err => {
+            done(err);
+          });
+      });
   });
 
   test("PUT /users/:user_id", done => {
@@ -83,8 +124,8 @@ suite("users route", () => {
         200,
         [
           {
-            username: "Jenkins",
-            hashed_password: "zwvehnnlzbwalucidzmbwaqyeamvjiffhdrxqezhrzmbmpacpjwqpajerdqk"
+            user_id: 3,
+            username: "Jenkins"
           }
         ],
         done
@@ -100,8 +141,8 @@ suite("users route", () => {
         200,
         [
           {
-            username: "Tyler",
-            hashed_password: "jqpzovmzzryiopemglqgusdihbexftypqdkridddpfdhzdprkbxioxapoyju"
+            user_id: 2,
+            username: "Tyler"
           }
         ],
         done

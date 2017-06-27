@@ -139,5 +139,100 @@ suite("pictures routes", () => {
         done
       );
   });
-  /*=================================*/
+
+  /*=================================
+        POST A USERS' FAVORITE
+  =================================*/
+  // User does a search
+  // User selects picture from those ~presented~
+
+  // Tries to POST that picture info ({ url: "", lat: #, lon: # }) to the pictures table -- there will be no formal route for this POST. It should just try to add the info...
+
+  // Knex checks to see if there is a picture in pictures table that has the same url as the picture object we are attempting to POST
+
+  // IF SO:
+  // // get the picture_id of that picture, and
+  // // POST { user_id: #,  picture_id: # } to favorites table
+
+  // IF NOT:
+  // // add the data { url: "", lat: #, lon: # } to pictures table, and get the picture_id of the new entry, make it available, and...
+  // // POST { user_id: #,  picture_id: # } to favorites table
+
+  test("POST /pictures/:user_id 'where picture is already in the pictures database'", done => {
+    request(server)
+      // The picture data being sent here is that of picture_id: 4 (which Tyler has already favorited)
+      .post("/pictures/1")
+      .set("Accept", "application/json")
+      .send({
+        url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
+        lat: "56.627389",
+        lon: "-122.726777"
+      })
+      // Behind the scenes, {user_id: 1, picture_id: 4} should be added to favorites table
+      // That should result in there now being an object in favorites table with favorite_id: 7 ------ HOW DO I TEST FOR THAT??
+      .expect("Content-Type", /json/)
+      .expect(
+        200,
+        [
+          {
+            picture_id: 4,
+            url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
+            lat: "56.627389",
+            lon: "-122.726777"
+          }
+        ],
+        done
+      );
+  });
+
+  test("POST /pictures/:user_id 'where picture is NOT already in the pictures database'", done => {
+    request(server)
+      // The picture data being sent here is all new
+      .post("/pictures/1")
+      .set("Accept", "application/json")
+      .send({
+        url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
+        lat: "12.345678",
+        lon: "-122.726777"
+      })
+      // Behind the scenes, {user_id: 1, picture_id: 5} should be added to favorites table
+      // That should result in there now being an object in favorites table with favorite_id: 8 ------ HOW DO I TEST FOR THAT??
+      .expect("Content-Type", /json/)
+      .expect(
+        200,
+        [
+          {
+            picture_id: 5,
+            url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
+            lat: "12.345678",
+            lon: "-122.726777"
+          }
+        ],
+        done
+      );
+  });
+
+  /*=================================
+        DELETE A USERS' FAVORITE
+  =================================*/
+  test("DELETE /pictures/:user_id/:picture_id", done => {
+    request(server)
+      // DELETE one of Ronan's favorites (i.e. where picture_id: 2)
+      .del("/pictures/1/2")
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .expect(
+        200,
+        [
+          {
+            picture_id: 2,
+            url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
+            lat: "44.600389",
+            lon: "-122.726307"
+          }
+        ],
+        done
+      );
+  });
+  // NEED TO TEST THAT THE PICTURE WAS ACTUALLY DELETED; NEED TO DO ANOTHER GET REQUEST FOR THAT USER'S FAVORITE AND HAVE IT RETURN A 404
 });

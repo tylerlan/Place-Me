@@ -1,14 +1,29 @@
 exports.seed = function(knex, Promise) {
-  // Deletes ALL existing entries
   return knex("pictures").then(function() {
-    // Inserts seed entries
     return knex("pictures").insert([
       {
         picture_id: 1,
-        url: "blahblahblah.com",
-        tags: "stretch goal",
+        url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
         lat: "54.627389",
-        lng: "-122.726307"
+        lon: "-122.500307"
+      },
+      {
+        picture_id: 2,
+        url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
+        lat: "44.600389",
+        lon: "-122.726307"
+      },
+      {
+        picture_id: 3,
+        url: "https://farm1.staticflickr.com/2/1418111_0a92445936_k.jpg",
+        lat: "51.627900",
+        lon: "-122.444307"
+      },
+      {
+        picture_id: 4,
+        url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
+        lat: "56.627389",
+        lon: "-122.726777"
       }
     ]);
   });

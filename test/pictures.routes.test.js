@@ -117,6 +117,11 @@ suite("pictures routes", () => {
       );
   });
 
+  /* TEST FOR: < < < < < < < < < < < < < < < < < < < < <
+  - User not found (404)
+  - Returns [] when user has no favorites
+  > > > > > > > > > > > > > > > > > > > > > > > > > > > */
+
   /*=================================
       GET ONE OF USERS' FAVORITES
   =================================*/
@@ -140,9 +145,14 @@ suite("pictures routes", () => {
       );
   });
 
+  /* TEST FOR: < < < < < < < < < < < < < < < < < < < < <
+  - User not found (404)
+  - Picture not found (404)
+  > > > > > > > > > > > > > > > > > > > > > > > > > > > */
+
   /*=================================
         POST A USERS' FAVORITE
-  =================================*/
+
   // User does a search
   // User selects picture from those ~presented~
 
@@ -157,6 +167,7 @@ suite("pictures routes", () => {
   // IF NOT:
   // // add the data { url: "", lat: #, lon: # } to pictures table, and get the picture_id of the new entry, make it available, and...
   // // POST { user_id: #,  picture_id: # } to favorites table
+  =================================*/
 
   test("POST /pictures/:user_id 'where picture is already in the pictures database'", done => {
     request(server)
@@ -169,20 +180,34 @@ suite("pictures routes", () => {
         lon: "-122.726777"
       })
       // Behind the scenes, {user_id: 1, picture_id: 4} should be added to favorites table
-      // That should result in there now being an object in favorites table with favorite_id: 7 ------ HOW DO I TEST FOR THAT??
       .expect("Content-Type", /json/)
-      .expect(
-        200,
-        [
-          {
-            picture_id: 4,
-            url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
-            lat: "56.627389",
-            lon: "-122.726777"
-          }
-        ],
-        done
-      );
+      .expect(200, [
+        {
+          picture_id: 4,
+          url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
+          lat: "56.627389",
+          lon: "-122.726777"
+        }
+      ]) // BELOW, CHECK DATABASE TO MAKE SURE THAT {user_id: 1, picture_id: 4} WAS ADDED TO FAVORITES. THE OBJECT SHOULD HAVE THE PROPERTY favorite_id: 7
+      .end((httpErr, res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex("favorites")
+          .where({ user_id: 1, picture_id: 5 })
+          .first()
+          .then(favorite => {
+            assert.deepEqual(favorite, {
+              favorite_id: 7,
+              user_id: 1,
+              picture_id: 4
+            });
+            done();
+          })
+          .catch(dbErr => {
+            done(dbErr);
+          });
+      });
   });
 
   test("POST /pictures/:user_id 'where picture is NOT already in the pictures database'", done => {
@@ -196,21 +221,39 @@ suite("pictures routes", () => {
         lon: "-122.726777"
       })
       // Behind the scenes, {user_id: 1, picture_id: 5} should be added to favorites table
-      // That should result in there now being an object in favorites table with favorite_id: 8 ------ HOW DO I TEST FOR THAT??
       .expect("Content-Type", /json/)
-      .expect(
-        200,
-        [
-          {
-            picture_id: 5,
-            url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
-            lat: "12.345678",
-            lon: "-122.726777"
-          }
-        ],
-        done
-      );
+      .expect(200, [
+        {
+          picture_id: 5,
+          url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
+          lat: "12.345678",
+          lon: "-122.726777"
+        }
+      ]) // BELOW, CHECK DATABASE TO MAKE SURE THAT {user_id: 1, picture_id: 5} WAS ADDED TO FAVORITES. THE OBJECT SHOULD HAVE THE PROPERTY favorite_id: 8
+      .end((httpErr, res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex("favorites")
+          .where({ user_id: 1, picture_id: 5 })
+          .first()
+          .then(favorite => {
+            assert.deepEqual(favorite, {
+              favorite_id: 8,
+              user_id: 1,
+              picture_id: 5
+            });
+            done();
+          })
+          .catch(dbErr => {
+            done(dbErr);
+          });
+      });
   });
+
+  /* TEST FOR: < < < < < < < < < < < < < < < < < < < < <
+  - User not found (404)
+  > > > > > > > > > > > > > > > > > > > > > > > > > > > */
 
   /*=================================
         DELETE A USERS' FAVORITE
@@ -221,18 +264,32 @@ suite("pictures routes", () => {
       .del("/pictures/1/2")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(
-        200,
-        [
-          {
-            picture_id: 2,
-            url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
-            lat: "44.600389",
-            lon: "-122.726307"
-          }
-        ],
-        done
-      );
+      .expect(200, [
+        {
+          picture_id: 2,
+          url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
+          lat: "44.600389",
+          lon: "-122.726307"
+        }
+      ]) // BELOW, CHECK DATABASE TO MAKE SURE THAT picture_id: 2 WAS DELETED
+      .end((httpErr, res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex("favorites")
+          .where({ user_id: 1, picture_id: 2 })
+          .first()
+          .then(favorite => {
+            assert.isTrue(favorite, "undefined");
+            done();
+          })
+          .catch(dbErr => {
+            done(dbErr);
+          });
+      });
   });
-  // NEED TO TEST THAT THE PICTURE WAS ACTUALLY DELETED; NEED TO DO ANOTHER GET REQUEST FOR THAT USER'S FAVORITE AND HAVE IT RETURN A 404
+  /* TEST FOR: < < < < < < < < < < < < < < < < < < < < <
+  - User not found (404)
+  - Picture not found (404)
+  > > > > > > > > > > > > > > > > > > > > > > > > > > > */
 });

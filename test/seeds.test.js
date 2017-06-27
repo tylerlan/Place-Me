@@ -19,19 +19,14 @@ suite(
             {
               user_id: 1,
               username: "Ronan",
-              hashed_password:
-                "deawbopjjifogzepgksvpocqcwvpskjcxvvrqfscghwmwrhvwhdznfemaapk"
+              hashed_password: "$2a$12$BgnPH2oUiLRr8rnLmAIOF.wt2GfJoijHb/qbqNLx5fEMsQOzxyHfy"
             }
           ];
 
           /* eslint-enable max-len */
 
           for (let i = 0; i < expected.length; i++) {
-            assert.deepEqual(
-              actual[i],
-              expected[i],
-              `Row id=${i + 1} not the same`
-            );
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
           }
 
           done();
@@ -57,11 +52,7 @@ suite(
           /* eslint-enable max-len */
 
           for (let i = 0; i < expected.length; i++) {
-            assert.deepEqual(
-              actual[i],
-              expected[i],
-              `Row id=${i + 1} not the same`
-            );
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
           }
 
           done();
@@ -88,11 +79,7 @@ suite(
           /* eslint-enable max-len */
 
           for (let i = 0; i < expected.length; i++) {
-            assert.deepEqual(
-              actual[i],
-              expected[i],
-              `Row id=${i + 1} not the same`
-            );
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
           }
 
           done();
@@ -119,11 +106,7 @@ suite(
           /* eslint-enable max-len */
 
           for (let i = 0; i < expected.length; i++) {
-            assert.deepEqual(
-              actual[i],
-              expected[i],
-              `Row id=${i + 1} not the same`
-            );
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
           }
 
           done();

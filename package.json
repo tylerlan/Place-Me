@@ -4,9 +4,10 @@
   "description": "The API takes a location and returns pictures and their data that were taken near the input location. It will also allow the user to store their favorite pictures, and add comments and ratings.",
   "main": "index.js",
   "scripts": {
+    "setupTestEnv": "knex migrate:rollback --env test && knex migrate:latest --env test && knex seed:run --env test",
     "dev": "nodemon index.js",
-    "coverage": "istanbul cover _mocha -- -R spec",
-    "test": "knex migrate:rollback --env test && knex migrate:latest --env test && knex seed:run --env test && mocha"
+    "coverage": "NODE_ENV=test npm run setupTestEnv && istanbul cover _mocha -- -R spec",
+    "test": "npm run setupTestEnv && mocha"
   },
   "repository": {
     "type": "git",

@@ -6,11 +6,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const UsersModel = require("../model/Users");
+const UserController = require("../model/Users");
 
 const router = express.Router();
 
-let userModel = new UsersModel();
+let userController = new UserController();
 
 // router.use((req, res, next) => {
 //   console.log("verify the shit");
@@ -21,11 +21,11 @@ router.post("/signup", (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
 
-  userModel.getByUsername(username).then(result => {
+  userController.getByUsername(username).then(result => {
     if (result.legnth) {
       return res.status(400).send("Username already exists");
     }
-    userModel
+    userController
       .create(req.body)
       .then(result => {
         const newEntry = result[0];
@@ -49,7 +49,7 @@ router.post("/login", (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
 
-  userModel
+  userController
     .getByUsername(username)
     .then(result => {
       if (!result) {
@@ -64,7 +64,10 @@ router.post("/login", (req, res) => {
 
       bcrypt.compare(password, userData.hashed_password).then(result => {
         if (!result) {
-          return res.status(400).set("Content-Type", "text/plain").send("Bad username or password");
+          return res
+            .status(400)
+            .set("Content-Type", "text/plain")
+            .send("Bad username or password");
         }
 
         let secret = process.env.JWT_KEY;
@@ -79,7 +82,7 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/users", (req, res) => {
-  let allUsers = userModel.getAllUsers();
+  let allUsers = userController.getAllUsers();
   allUsers
     .then(result => {
       return res.status(200).json(result);
@@ -92,7 +95,7 @@ router.get("/users", (req, res) => {
 
 router.get("/users/:user_id", (req, res) => {
   let searchedId = req.params.user_id;
-  let singleUser = userModel.getById(searchedId);
+  let singleUser = userController.getById(searchedId);
 
   singleUser
     .then(result => {
@@ -116,7 +119,7 @@ router.put("/users/:user_id", (req, res) => {
   }
 
   // if (currentPassword && newPassword) {
-  //   userModel
+  //   userController
   //     .getPassword(searchedId)
   //     .then(results => {
   //       if (results.length) {
@@ -137,7 +140,7 @@ router.put("/users/:user_id", (req, res) => {
   //
   // console.log("CHANGES", changes);
   //
-  // userModel.updateUser(searchedId, changes).then(result => {
+  // userController.updateUser(searchedId, changes).then(result => {
   //   return res.status(200).json(result);
   // });
 });
@@ -146,14 +149,14 @@ router.delete("/users/:user_id", (req, res) => {
   let searchedId = req.params.user_id;
   let deletedUser;
 
-  userModel
+  userController
     .getById(searchedId)
     .then(user => {
       if (!user) {
         return res.status(404).send(`User at ${searchedId} not found`);
       }
       deletedUser = user[0];
-      return userModel.deleteUser(searchedId);
+      return userController.deleteUser(searchedId);
     })
     .then(() => {
       res.send(deletedUser);
@@ -173,7 +176,7 @@ router.delete("/users/:user_id", (req, res) => {
 //
 //
 function updateUsername(res, username, searchedId) {
-  userModel
+  userController
     .getByUsername(username)
     .then(result => {
       if (result.length) {
@@ -183,7 +186,7 @@ function updateUsername(res, username, searchedId) {
       return changes;
     })
     .then(changes => {
-      userModel.updateUser(searchedId, changes).then(result => {
+      userController.updateUser(searchedId, changes).then(result => {
         return res.status(200).json(result);
       });
     })

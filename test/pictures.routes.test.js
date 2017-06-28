@@ -194,7 +194,7 @@ suite("pictures routes", () => {
           return done(httpErr);
         }
         knex("favorites")
-          .where({ user_id: 1, picture_id: 5 })
+          .where({ user_id: 1, picture_id: 4 })
           .first()
           .then(favorite => {
             assert.deepEqual(favorite, {
@@ -280,7 +280,7 @@ suite("pictures routes", () => {
           .where({ user_id: 1, picture_id: 2 })
           .first()
           .then(favorite => {
-            assert.isTrue(favorite, "undefined");
+            assert.isUndefined(favorite);
             done();
           })
           .catch(dbErr => {

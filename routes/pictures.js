@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const PictureController = require("../model/Pictures");
+const PictureController = require("../controller/Pictures");
 
 const router = express.Router();
 
@@ -26,20 +26,14 @@ router.get("/pictures", (req, res) => {
 });
 
 router.get("/pictures/:user_id", (req, res) => {
-  let searchedId = req.params.user_id;
-  let userFavoritePictures = pictureController.getPicturesByUserId(searchedId);
+  let user_id = req.params.user_id;
 
-  userFavoritePictures
-    .then(result => {
-      if (!result) {
-        return res.status(404).send(`User at ${searchedId} not found`);
-      }
-      return res.status(200).json(result);
-    })
-    .catch(err => {
-      console.log("ERROR:", err);
-      res.sendStatus(500);
-    });
+  pictureController.getAllUsersFavorites(user_id).then(usersFavorites => {
+    if (usersFavorites.length === 0) {
+      return res.status(404).send(`User at ${user_id} not found`);
+    }
+    res.status(200).json(usersFavorites);
+  });
 });
 
 router.get("/pictures/:user_id/:picture_id", (req, res) => {
@@ -48,15 +42,16 @@ router.get("/pictures/:user_id/:picture_id", (req, res) => {
   let checkForPicture = pictureController.checkIfUserHasFavorite(user_id);
   let specificPicture = pictureController.getPicturesByPictureId(picture_id);
 
-  checkForPicture.then(eachPicture => {
-    if (!eachPicture) {
-      return res.status(404).send(`User at ${searchedId} not found`);
+  checkForPicture.then(allPictures => {
+    if (!allPictures) {
+      return res.status(404).send(`User at ${user_id} not found`);
     } else {
-      eachPicture.forEach(eachPicture => {
-        if (eachPicture.picture_id === picture_id) {
+      allPictures.forEach(eachPicture => {
+        if (eachPicture.picture_id === picture_id * 1) {
           specificPicture
             .then(result => {
               res.status(200).json(result);
+              return;
             })
             .catch(err => {
               console.log("ERROR:", err);
@@ -64,12 +59,77 @@ router.get("/pictures/:user_id/:picture_id", (req, res) => {
             });
         }
       });
+      // res.status(404).send(`Picture at ${picture_id} not found`);
     }
   });
 });
 
-router.post("/pictures/:user_id/:picture_id", (req, res) => {});
+router.post("/pictures/:user_id", (req, res) => {
+  let user_id = req.params.user_id;
+  let pictureObj = req.body;
+  let checkUserForPicture = pictureController.checkIfUserHasFavorite(user_id);
+  let searchForURL = pictureController.searchForURL(pictureObj);
+  let addToPictures = pictureController.addToPictures(pictureObj);
 
-router.delete("/pictures/:user_id/:picture_id", (req, res) => {});
+  checkUserForPicture
+    .then(result => {
+      if (result.length === 0) {
+        return res.status(404).send(`User at ${user_id} not found`);
+      }
+      searchForURL
+        .then(result => {
+          if (result.length > 0) {
+            pictureController.addToFavorites(user_id, result[0].picture_id);
+            return res.status(200).json(result);
+          } else {
+            addToPictures
+              .then(result => {
+                return res.status(200).json(result);
+              })
+              .catch(err => {
+                console.log("ERROR:", err);
+                res.sendStatus(500);
+              });
+          }
+        })
+        .catch(err => {
+          console.log("ERROR:", err);
+          res.sendStatus(500);
+        });
+    })
+    .catch(err => {
+      console.log("ERROR:", err);
+      res.sendStatus(500);
+    });
+});
+
+router.delete("/pictures/:user_id/:picture_id", (req, res) => {
+  let user_id = req.params.user_id;
+  let picture_id = req.params.picture_id;
+  let checkUserForPicture = pictureController.checkIfUserHasFavorite(user_id);
+  let pathPictureToDelete = pictureController.getPicturesByPictureId(
+    picture_id
+  );
+  let pictureToDelete;
+  let deletePictureFromFavorites = pictureController.deletePictureFromFavorites(
+    user_id,
+    picture_id
+  );
+
+  checkUserForPicture.then(result => {
+    if (result.length === 0) {
+      return res.status(404).send(`User at ${user_id} not found`);
+    }
+    pathPictureToDelete.then(result => {
+      pictureToDelete = result;
+    });
+    deletePictureFromFavorites.then(result => {
+      if (result > 0) {
+        return res.status(200).json(pictureToDelete);
+      }
+      return res.status(404).send(`Picture at ${picture_id} not found`);
+    });
+  });
+});
 
 module.exports = router;

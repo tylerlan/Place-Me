@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const knex = require("../knex");
 
-class UsersModel {
+class UserController {
   getByUsername(username) {
     return knex("users").where("username", username).then(user => {
       delete user.hashed_password;
@@ -46,7 +46,9 @@ class UsersModel {
   }
 
   updateUser(id, changes) {
-    return knex("users").where("user_id", id).update(changes, ["user_id", "username"]);
+    return knex("users")
+      .where("user_id", id)
+      .update(changes, ["user_id", "username"]);
   }
 
   deleteUser(id) {
@@ -56,4 +58,4 @@ class UsersModel {
 
 //NEED TO WRITE UNIT TESTS
 
-module.exports = UsersModel;
+module.exports = UserController;

@@ -14,10 +14,12 @@ app.use(cookieParser());
 const users = require("./routes/users");
 const pictures = require("./routes/pictures");
 const search = require("./routes/search");
+const comments = require("./routes/comments");
 
 app.use(users);
 app.use(pictures);
 app.use(search);
+app.use(comments);
 
 app.use((req, res) => {
   res.sendStatus(404);

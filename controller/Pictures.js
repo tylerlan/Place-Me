@@ -2,34 +2,18 @@ const bcrypt = require("bcrypt");
 const knex = require("../knex");
 
 class PictureController {
+  getAllUsersFavorites(user_id) {
+    let subquery = knex("favorites")
+      .select("picture_id")
+      .where("user_id", user_id);
+    return knex("pictures").where("picture_id", "in", subquery);
+  }
+
   getAllPictures() {
     return knex("pictures")
       .orderBy("picture_id", "asc")
       .then(multiPicturesData => multiPicturesData);
   }
-
-  getPicturesByUserId(user_id) {
-    return knex("favorites").where("user_id", user_id).then(userFavorites => {
-      return userFavorites.map(favoritedPicture => {
-        let picId = favoritedPicture.picture_id;
-        return knex("pictures")
-          .where("picId", picture_id)
-          .then(picture => picture);
-      });
-    });
-  }
-
-  // getFavoritePicture(user_id, picture_id) {
-  //   return knex("favorites").where("user_id", user_id).then(userFavorites => {
-  //     if (userFavorites.picture_id === picture_id) {
-  //       return knex("pictures")
-  //         .where("picture_id", picture_id)
-  //         .then(picture => picture);
-  //     } else {
-  //       return false;
-  //     }
-  //   });
-  // }
 
   checkIfUserHasFavorite(user_id) {
     return knex("favorites")
@@ -41,6 +25,35 @@ class PictureController {
     return knex("pictures")
       .where("picture_id", picture_id)
       .then(picture => picture);
+  }
+
+  addToFavorites(user_id, picture_id) {
+    return knex("favorites").insert(
+      { user_id: user_id, picture_id: picture_id },
+      ["picture_id"]
+    );
+  }
+
+  searchForURL(pictureObj) {
+    return knex("pictures").where("url", pictureObj.url).then(result => result);
+  }
+
+  addToPictures(pictureObj) {
+    return knex("pictures").insert(
+      {
+        url: pictureObj.url,
+        lat: pictureObj.lat,
+        lon: pictureObj.lon
+      },
+      ["picture_id", "url", "lat", "lon"]
+    );
+  }
+
+  deletePictureFromFavorites(user_id, picture_id) {
+    return knex("favorites")
+      .del()
+      .where("user_id", user_id)
+      .where("picture_id", picture_id);
   }
 }
 

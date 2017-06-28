@@ -13,7 +13,6 @@ router.get("/search", (req, res) => {
   let lat = req.query.lat;
   let lon = req.query.lon;
 
-
   if (lon === "undefined" || lat === "undefined" || !lon || !lat) {
     return res
       .status(400)

@@ -143,5 +143,8 @@ suite("search routes", () => {
       .expect("Content-Type", /plain/)
       .expect(500, "API cannot process this request", done);
   });
+<<<<<<< HEAD
 
+=======
+>>>>>>> ced0298d056b50504ba2d4184eb05cc8a4207e61
 });

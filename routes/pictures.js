@@ -79,12 +79,15 @@ router.post("/pictures/:user_id", (req, res) => {
       searchForURL
         .then(result => {
           if (result.length > 0) {
-            pictureController.addToFavorites(user_id, result[0].picture_id);
-            return res.status(200).json(result);
+            pictureController.addToFavorites(user_id, result[0].picture_id).then(() => {
+              return res.status(200).json(result);
+            });
           } else {
             addToPictures
               .then(result => {
-                return res.status(200).json(result);
+                pictureController.addToFavorites(user_id, result[0].picture_id).then(() => {
+                  return res.status(200).json(result);
+                });
               })
               .catch(err => {
                 console.log("ERROR:", err);
@@ -107,9 +110,7 @@ router.delete("/pictures/:user_id/:picture_id", (req, res) => {
   let user_id = req.params.user_id;
   let picture_id = req.params.picture_id;
   let checkUserForPicture = pictureController.checkIfUserHasFavorite(user_id);
-  let pathPictureToDelete = pictureController.getPicturesByPictureId(
-    picture_id
-  );
+  let pathPictureToDelete = pictureController.getPicturesByPictureId(picture_id);
   let pictureToDelete;
   let deletePictureFromFavorites = pictureController.deletePictureFromFavorites(
     user_id,

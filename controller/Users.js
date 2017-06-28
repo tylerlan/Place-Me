@@ -58,4 +58,4 @@ class UserController {
 
 //NEED TO WRITE UNIT TESTS
 
-module.exports = UsersModel;
+module.exports = UserController;

@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const UserController = require("../model/Users");
+const UserController = require("../controller/Users");
 
 const router = express.Router();
 

@@ -13,9 +13,11 @@ app.use(cookieParser());
 
 const users = require("./routes/users");
 const pictures = require("./routes/pictures");
+const comments = require("./routes/comments");
 
 app.use(users);
 app.use(pictures);
+app.use(comments);
 
 app.use((req, res) => {
   res.sendStatus(404);

@@ -9,19 +9,31 @@ const router = express.Router();
 
 let searchController = new SearchController();
 
-router.get("/search?lat&lon", (req, res) => {
+router.get("/search", (req, res) => {
   let lat = req.query.lat;
   let lon = req.query.lon;
 
+  if (lon === "undefined" || lat === "undefined" || !lon || !lat) {
+    return res
+      .status(400)
+      .set("Content-Type", "text/plain")
+      .send("Search requires both lat and lon");
+  }
   let pictureData = searchController.getPictureData(lat, lon);
 
   pictureData
-    .then(arrayOfPictureDataObjects => {
-      return res.status(200).json(arrayOfPictureDataObjects);
+    .then(picArray => {
+      return searchController.generateObjects(picArray, lat, lon);
+    })
+    .then(outputArray => {
+      res.status(200).json(outputArray);
+      return;
     })
     .catch(err => {
-      console.log("ERROR:", err);
-      res.sendStatus(500);
+      return res
+        .status(500)
+        .set("Content-Type", "text/plain")
+        .send("API cannot process this request");
     });
 });
 

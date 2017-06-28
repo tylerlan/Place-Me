@@ -36,6 +36,48 @@ suite(
         });
     });
 
+    test("pictures rows", done => {
+      knex("pictures")
+        .orderBy("picture_id", "ASC")
+        .then(actual => {
+          let expected = [
+            {
+              picture_id: 1,
+              url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
+              lat: "54.627389",
+              lon: "-122.500307"
+            },
+            {
+              picture_id: 2,
+              url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
+              lat: "44.600389",
+              lon: "-122.726307"
+            },
+            {
+              picture_id: 3,
+              url: "https://farm1.staticflickr.com/2/1418111_0a92445936_k.jpg",
+              lat: "51.627900",
+              lon: "-122.444307"
+            },
+            {
+              picture_id: 4,
+              url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
+              lat: "56.627389",
+              lon: "-122.726777"
+            }
+          ];
+
+          for (let i = 0; i < expected.length; i++) {
+            assert.deepEqual(actual[i], expected[i], `Row id=${i + 1} not the same`);
+          }
+
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
+    });
+
     test("favorites rows", done => {
       knex("favorites")
         .orderBy("favorite_id", "ASC")
@@ -72,25 +114,7 @@ suite(
               comment_id: 1,
               user_id: 1,
               picture_id: 1,
-              comment: "I love to code!"
-            },
-            {
-              comment_id: 2,
-              user_id: 2,
-              picture_id: 4,
-              comment: "Javascript is the best!"
-            },
-            {
-              comment_id: 3,
-              user_id: 2,
-              picture_id: 2,
-              comment: "Fullstack for the win."
-            },
-            {
-              comment_id: 4,
-              user_id: 1,
-              picture_id: 3,
-              comment: "Who says we can't do it all?"
+              comment: "this place is awesome"
             }
           ];
 

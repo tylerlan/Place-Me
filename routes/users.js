@@ -296,7 +296,6 @@ function updateUsername(res, username, searchedId) {
     })
     .then(changes => {
       userController.updateUser(searchedId, changes).then(result => {
-        console.log(result);
         return res.status(200).json(result);
       });
     })

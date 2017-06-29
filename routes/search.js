@@ -47,7 +47,6 @@ router.get("/search", (req, res) => {
       return searchController.generateObjects(picArray, lat, lon);
     })
     .then(outputArray => {
-      console.log(outputArray);
       res.status(200).json(outputArray);
       return;
     })

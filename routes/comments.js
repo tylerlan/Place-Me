@@ -46,7 +46,6 @@ router.get("/comments/:user_id", verifyToken, (req, res) => {
       if (usersComments.length === 0) {
         return res.status(404).send("This user hasn't commented or doesn't exist");
       }
-      console.log(usersComments);
       res.status(200).json(usersComments);
     })
     .catch(err => {
@@ -160,7 +159,6 @@ router.post("/comments/:user_id", verifyToken, (req, res) => {
           } else {
             addToComments
               .then(result => {
-                console.log(result);
                 res.status(200).json(result);
                 return;
               })

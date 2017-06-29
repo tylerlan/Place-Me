@@ -7,7 +7,7 @@ const { suite, test } = require("mocha");
 const request = require("supertest");
 const server = require("../index");
 
-suite("search routes", () => {
+suite.only("search routes", () => {
   test("GET /search?lat&lon 'in Sydney'", done => {
     let lat = -33.86882;
     let lon = 151.209296;
@@ -80,6 +80,16 @@ suite("search routes", () => {
       });
   });
 
+  test("GET /search?lat&lon 'invalid coordinates'", done => {
+    let lat = +90;
+    let lon = +180.2;
+    request(server)
+      .get(`/search?lat=${lat}&lon=${lon}`)
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .expect(500, done);
+  });
+
   test("GET /search?lat&lon 'lon undefined'", done => {
     let lat = -33.86882;
     let lon;
@@ -132,15 +142,5 @@ suite("search routes", () => {
       .set("Accept", "application/json")
       .expect("Content-Type", /plain/)
       .expect(400, "Search requires both lat and lon", done);
-  });
-
-  test("GET /search?lat&lon 'lon undefined'", done => {
-    let lat = "a number";
-    let lon = "another number";
-    request(server)
-      .get(`/search?lat=${lat}&lon=${lon}`)
-      .set("Accept", "application/json")
-      .expect("Content-Type", /plain/)
-      .expect(500, "API cannot process this request", done);
   });
 });

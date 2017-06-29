@@ -10,6 +10,8 @@ const knex = require("../knex");
 const server = require("../index");
 
 suite("pictures routes", () => {
+  const agent = request.agent(server);
+  const password = "youreawizard";
   /*=================================
       GET ALL FAVORITES (in the db)
   =================================*/
@@ -55,94 +57,148 @@ suite("pictures routes", () => {
   =================================*/
   test("GET /pictures/:user_id", done => {
     request(server)
-      // GET Ronan's favorites
-      .get("/pictures/1")
+      .post("/login")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(
-        200,
-        [
-          {
-            picture_id: 1,
-            url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
-            lat: "54.627389",
-            lon: "-122.500307"
-          },
-          {
-            picture_id: 2,
-            url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
-            lat: "44.600389",
-            lon: "-122.726307"
-          },
-          {
-            picture_id: 3,
-            url: "https://farm1.staticflickr.com/2/1418111_0a92445936_k.jpg",
-            lat: "51.627900",
-            lon: "-122.444307"
-          }
-        ],
-        done
-      );
+      .send({
+        username: "Ronan",
+        password
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          // GET Ronan's favorites
+          .get("/pictures/1")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(
+            200,
+            [
+              {
+                picture_id: 1,
+                url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
+                lat: "54.627389",
+                lon: "-122.500307"
+              },
+              {
+                picture_id: 2,
+                url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
+                lat: "44.600389",
+                lon: "-122.726307"
+              },
+              {
+                picture_id: 3,
+                url: "https://farm1.staticflickr.com/2/1418111_0a92445936_k.jpg",
+                lat: "51.627900",
+                lon: "-122.444307"
+              }
+            ],
+            done
+          );
+      });
   });
 
   test("GET /pictures/:user_id", done => {
     request(server)
-      // GET Tyler's favorites
-      .get("/pictures/2")
+      .post("/login")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(
-        200,
-        [
-          {
-            picture_id: 2,
-            url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
-            lat: "44.600389",
-            lon: "-122.726307"
-          },
-          {
-            picture_id: 3,
-            url: "https://farm1.staticflickr.com/2/1418111_0a92445936_k.jpg",
-            lat: "51.627900",
-            lon: "-122.444307"
-          },
-          {
-            picture_id: 4,
-            url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
-            lat: "56.627389",
-            lon: "-122.726777"
-          }
-        ],
-        done
-      );
+      .send({
+        username: "Ronan",
+        password
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          // GET Tyler's favorites
+          .get("/pictures/2")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(
+            200,
+            [
+              {
+                picture_id: 2,
+                url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
+                lat: "44.600389",
+                lon: "-122.726307"
+              },
+              {
+                picture_id: 3,
+                url: "https://farm1.staticflickr.com/2/1418111_0a92445936_k.jpg",
+                lat: "51.627900",
+                lon: "-122.444307"
+              },
+              {
+                picture_id: 4,
+                url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
+                lat: "56.627389",
+                lon: "-122.726777"
+              }
+            ],
+            done
+          );
+      });
   });
 
-  /* TEST FOR: < < < < < < < < < < < < < < < < < < < < <
-  - User not found (404)
-  - Returns [] when user has no favorites
-  > > > > > > > > > > > > > > > > > > > > > > > > > > > */
+  test("GET /pictures/:user_id 'where user does not exist'", done => {
+    request(server)
+      .post("/login")
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .send({
+        username: "Ronan",
+        password
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .get("/pictures/20")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(404, done);
+      });
+  });
 
   /*=================================
       GET ONE OF USERS' FAVORITES
   =================================*/
   test("GET /pictures/:user_id/:picture_id", done => {
     request(server)
-      // GET one of Ronan's favorites
-      .get("/pictures/1/2")
+      .post("/login")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(
-        200,
-        [
-          {
-            picture_id: 2,
-            url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
-            lat: "44.600389",
-            lon: "-122.726307"
-          }
-        ],
-        done
-      );
+      .send({
+        username: "Ronan",
+        password
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .get("/pictures/1/2")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(
+            200,
+            [
+              {
+                picture_id: 2,
+                url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
+                lat: "44.600389",
+                lon: "-122.726307"
+              }
+            ],
+            done
+          );
+      });
   });
 
   /* TEST FOR: < < < < < < < < < < < < < < < < < < < < <
@@ -171,125 +227,218 @@ suite("pictures routes", () => {
 
   test("POST /pictures/:user_id 'where picture is already in the pictures database'", done => {
     request(server)
-      // The picture data being sent here is that of picture_id: 4 (which Tyler has already favorited)
-      .post("/pictures/1")
+      .post("/login")
       .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
       .send({
-        url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
-        lat: "56.627389",
-        lon: "-122.726777"
+        username: "Ronan",
+        password
       })
-      // Behind the scenes, {user_id: 1, picture_id: 4} should be added to favorites table
-      .expect("Content-Type", /json/)
-      .expect(200, [
-        {
-          picture_id: 4,
-          url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
-          lat: "56.627389",
-          lon: "-122.726777"
-        }
-      ]) // BELOW, CHECK DATABASE TO MAKE SURE THAT {user_id: 1, picture_id: 4} WAS ADDED TO FAVORITES. THE OBJECT SHOULD HAVE THE PROPERTY favorite_id: 7
-      .end((httpErr, res) => {
-        if (httpErr) {
-          return done(httpErr);
-        }
-        knex("favorites")
-          .where({ user_id: 1, picture_id: 4 })
-          .first()
-          .then(favorite => {
-            assert.deepEqual(favorite, {
-              favorite_id: 7,
-              user_id: 1,
-              picture_id: 4
-            });
-            done();
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .post("/pictures/1")
+          .set("Accept", "application/json")
+          .send({
+            url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
+            lat: "56.627389",
+            lon: "-122.726777"
           })
-          .catch(dbErr => {
-            done(dbErr);
+          .expect("Content-Type", /json/)
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(200, [
+            {
+              picture_id: 4,
+              url: "https://farm1.staticflickr.com/2/3788878_2f56283336_m.jpg",
+              lat: "56.627389",
+              lon: "-122.726777"
+            }
+          ])
+          .end((httpErr, res) => {
+            if (httpErr) {
+              return done(httpErr);
+            }
+            knex("favorites")
+              .where({ user_id: 1, picture_id: 4 })
+              .first()
+              .then(favorite => {
+                assert.deepEqual(favorite, {
+                  favorite_id: 7,
+                  user_id: 1,
+                  picture_id: 4
+                });
+                done();
+              })
+              .catch(dbErr => {
+                done(dbErr);
+              });
           });
       });
   });
 
   test("POST /pictures/:user_id 'where picture is NOT already in the pictures database'", done => {
     request(server)
-      // The picture data being sent here is all new
-      .post("/pictures/1")
+      .post("/login")
       .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
       .send({
-        url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
-        lat: "12.345678",
-        lon: "-122.726777"
+        username: "Ronan",
+        password
       })
-      // Behind the scenes, {user_id: 1, picture_id: 5} should be added to favorites table
-      .expect("Content-Type", /json/)
-      .expect(200, [
-        {
-          picture_id: 5,
-          url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
-          lat: "12.345678",
-          lon: "-122.726777"
-        }
-      ]) // BELOW, CHECK DATABASE TO MAKE SURE THAT {user_id: 1, picture_id: 5} WAS ADDED TO FAVORITES. THE OBJECT SHOULD HAVE THE PROPERTY favorite_id: 8
-      .end((httpErr, res) => {
-        if (httpErr) {
-          return done(httpErr);
-        }
-        knex("favorites")
-          .where({ user_id: 1, picture_id: 5 })
-          .first()
-          .then(favorite => {
-            assert.deepEqual(favorite, {
-              favorite_id: 8,
-              user_id: 1,
-              picture_id: 5
-            });
-            done();
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .post("/pictures/1")
+          .set("Accept", "application/json")
+          .send({
+            url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
+            lat: "12.345678",
+            lon: "-122.726777"
           })
-          .catch(dbErr => {
-            done(dbErr);
+          .expect("Content-Type", /json/)
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(200, [
+            {
+              picture_id: 5,
+              url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
+              lat: "12.345678",
+              lon: "-122.726777"
+            }
+          ])
+          .end((httpErr, res) => {
+            if (httpErr) {
+              return done(httpErr);
+            }
+            knex("favorites")
+              .where({ user_id: 1, picture_id: 5 })
+              .first()
+              .then(favorite => {
+                assert.deepEqual(favorite, {
+                  favorite_id: 8,
+                  user_id: 1,
+                  picture_id: 5
+                });
+                done();
+              })
+              .catch(dbErr => {
+                done(dbErr);
+              });
           });
       });
   });
 
-  /* TEST FOR: < < < < < < < < < < < < < < < < < < < < <
-  - User not found (404)
-  > > > > > > > > > > > > > > > > > > > > > > > > > > > */
+  test("POST /pictures/:user_id 'where user is NOT already in the users database'", done => {
+    request(server)
+      .post("/login")
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .send({
+        username: "Ronan",
+        password
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .post("/pictures/20")
+          .set("Accept", "application/json")
+          .send({
+            url: "https://farm1.staticflickr.com/2/1234567_8g10111213_i.jpg",
+            lat: "12.345678",
+            lon: "-122.726777"
+          })
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(404, done);
+      });
+  });
 
   /*=================================
         DELETE A USERS' FAVORITE
   =================================*/
   test("DELETE /pictures/:user_id/:picture_id", done => {
     request(server)
-      // DELETE one of Ronan's favorites (i.e. where picture_id: 2)
-      .del("/pictures/1/2")
+      .post("/login")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(200, [
-        {
-          picture_id: 2,
-          url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
-          lat: "44.600389",
-          lon: "-122.726307"
-        }
-      ]) // BELOW, CHECK DATABASE TO MAKE SURE THAT picture_id: 2 WAS DELETED
-      .end((httpErr, res) => {
-        if (httpErr) {
-          return done(httpErr);
-        }
-        knex("favorites")
-          .where({ user_id: 1, picture_id: 2 })
-          .first()
-          .then(favorite => {
-            assert.isUndefined(favorite);
-            done();
-          })
-          .catch(dbErr => {
-            done(dbErr);
+      .send({
+        username: "Ronan",
+        password
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .del("/pictures/1/2")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(200, [
+            {
+              picture_id: 2,
+              url: "https://farm1.staticflickr.com/2/9998878_4m62283336_l.jpg",
+              lat: "44.600389",
+              lon: "-122.726307"
+            }
+          ])
+          .end((httpErr, res) => {
+            if (httpErr) {
+              return done(httpErr);
+            }
+            knex("favorites")
+              .where({ user_id: 1, picture_id: 2 })
+              .first()
+              .then(favorite => {
+                assert.isUndefined(favorite);
+                done();
+              })
+              .catch(dbErr => {
+                done(dbErr);
+              });
           });
       });
   });
-  /* TEST FOR: < < < < < < < < < < < < < < < < < < < < <
-  - User not found (404)
-  - Picture not found (404)
-  > > > > > > > > > > > > > > > > > > > > > > > > > > > */
+
+  test("DELETE /pictures/:user_id/:picture_id 'where user is NOT already in the users database'", done => {
+    request(server)
+      .post("/login")
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .send({
+        username: "Ronan",
+        password
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .del("/pictures/20/1")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(404, "User at 20 not found", done);
+      });
+  });
+
+  test("DELETE /pictures/:user_id/:picture_id 'where picture is NOT already in the picture database'", done => {
+    request(server)
+      .post("/login")
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .send({
+        username: "Ronan",
+        password
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .del("/pictures/1/40")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(404, "Picture at 40 not found", done);
+      });
+  });
 });

@@ -10,9 +10,10 @@ const knex = require("../knex");
 const server = require("../index");
 
 suite("users route", () => {
-  test("POST /signup", done => {
-    let password = "youreawizard";
+  const agent = request.agent(server);
+  const password = "youreawizard";
 
+  test("POST /signup", done => {
     request(server)
       .post("/signup")
       .set("Accept", "application/json")
@@ -55,8 +56,6 @@ suite("users route", () => {
       });
   });
   test("POST /login", done => {
-    let password = "youreawizard";
-
     request(server)
       .post("/login")
       .set("Accept", "application/json")
@@ -76,9 +75,6 @@ suite("users route", () => {
   });
 
   test("GET /users", done => {
-    let agent = request.agent(server);
-    let password = "youreawizard";
-
     request(server)
       .post("/login")
       .set("Accept", "application/json")
@@ -87,13 +83,6 @@ suite("users route", () => {
         username: "John",
         password
       })
-      .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
-      .expect(200, {
-        userId: 4,
-        username: "John",
-        loggedIn: true
-      })
-      .expect("Content-Type", /json/)
       .end((err, res) => {
         if (err) return done(err);
 
@@ -128,9 +117,6 @@ suite("users route", () => {
   });
 
   test("GET /users/:user_id", done => {
-    let agent = request.agent(server);
-    let password = "youreawizard";
-
     request(server)
       .post("/login")
       .set("Accept", "application/json")
@@ -139,13 +125,6 @@ suite("users route", () => {
         username: "John",
         password
       })
-      .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
-      .expect(200, {
-        userId: 4,
-        username: "John",
-        loggedIn: true
-      })
-      .expect("Content-Type", /json/)
       .end((err, res) => {
         if (err) return done(err);
 
@@ -168,9 +147,6 @@ suite("users route", () => {
   });
 
   test("PUT /users/:user_id username", done => {
-    let agent = request.agent(server);
-    let password = "youreawizard";
-
     request(server)
       .post("/login")
       .set("Accept", "application/json")
@@ -179,13 +155,6 @@ suite("users route", () => {
         username: "John",
         password
       })
-      .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
-      .expect(200, {
-        userId: 4,
-        username: "John",
-        loggedIn: true
-      })
-      .expect("Content-Type", /json/)
       .end((err, res) => {
         if (err) return done(err);
 
@@ -209,9 +178,6 @@ suite("users route", () => {
   });
 
   test("DELETE /users/:user_id", done => {
-    let agent = request.agent(server);
-    let password = "youreawizard";
-
     request(server)
       .post("/login")
       .set("Accept", "application/json")
@@ -220,13 +186,6 @@ suite("users route", () => {
         username: "John",
         password
       })
-      .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
-      .expect(200, {
-        userId: 4,
-        username: "John",
-        loggedIn: true
-      })
-      .expect("Content-Type", /json/)
       .end((err, res) => {
         if (err) return done(err);
 

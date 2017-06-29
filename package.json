@@ -2,6 +2,10 @@
   "name": "place-me",
   "version": "1.0.0",
   "description": "The API takes a location and returns pictures and their data that were taken near the input location. It will also allow the user to store their favorite pictures, and add comments and ratings.",
+  "apidoc": {
+    "title": "ShareCast",
+    "url": "https://sharecast.com"
+  },
   "main": "index.js",
   "scripts": {
     "setupTestEnv": "knex migrate:rollback --env test && knex migrate:latest --env test && knex seed:run --env test",
@@ -29,7 +33,8 @@
     "knex": "^0.13.0",
     "pg": "^6.4.0",
     "request": "^2.81.0",
-    "request-promise": "^4.2.1"
+    "request-promise": "^4.2.1",
+    "apidoc": "^0.17.6"
   },
   "devDependencies": {
     "chai": "^4.0.2",

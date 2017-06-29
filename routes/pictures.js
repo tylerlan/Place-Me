@@ -15,6 +15,21 @@ const router = express.Router();
 
 let pictureController = new PictureController();
 
+/**
+ * @api {get} /pictures GET All pictures
+ * @apiVersion 1.0.0
+ * @apiGroup Pictures
+ * @apiSuccess {Object[]} pictures Returns all pictures.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [{
+ *       picture_id: 1,
+ *       url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
+ *       lat: "54.627389",
+ *       lon: "-122.500307"
+ *     }]
+ */
+
 router.get("/pictures", (req, res) => {
   let allPictures = pictureController.getAllPictures();
 
@@ -28,6 +43,28 @@ router.get("/pictures", (req, res) => {
     });
 });
 
+/**
+ * @api {get} /pictures/:user_id GET Users pictures
+ * @apiVersion 1.0.0
+ * @apiGroup Pictures
+ * @apiSuccess {Object[]} pictures Returns users pictures.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [{
+ *       picture_id: 1,
+ *       url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
+ *       lat: "54.627389",
+ *       lon: "-122.500307"
+ *     }]
+ *
+ * @apiError 404 User at :id not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "User at 1 not found"
+ *     }
+ */
+
 router.get("/pictures/:user_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
 
@@ -38,6 +75,28 @@ router.get("/pictures/:user_id", verifyToken, (req, res) => {
     res.status(200).json(usersFavorites);
   });
 });
+
+/**
+ * @api {get} /pictures/:user_id/:picture_id GET Users pictures
+ * @apiVersion 1.0.0
+ * @apiGroup Pictures
+ * @apiSuccess {Object} picture Returns a picture.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       picture_id: 1,
+ *       url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
+ *       lat: "54.627389",
+ *       lon: "-122.500307"
+ *     }
+ *
+ * @apiError 404 User at :id not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "User at 1 not found"
+ *     }
+ */
 
 router.get("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
@@ -65,6 +124,28 @@ router.get("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
     }
   });
 });
+
+/**
+ * @api {post} /pictures/:user_id POST Picture to user favorites
+ * @apiVersion 1.0.0
+ * @apiGroup Pictures
+ * @apiSuccess {Object} picture Returns a picture.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       picture_id: 1,
+ *       url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
+ *       lat: "54.627389",
+ *       lon: "-122.500307"
+ *     }
+ *
+ * @apiError 404 User at :id not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "User at 1 not found"
+ *     }
+ */
 
 router.post("/pictures/:user_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
@@ -107,6 +188,34 @@ router.post("/pictures/:user_id", verifyToken, (req, res) => {
       res.sendStatus(500);
     });
 });
+
+/**
+ * @api {delete} /pictures/:user_id/:picture_id DELETE Picture from favorites
+ * @apiVersion 1.0.0
+ * @apiGroup Pictures
+ * @apiSuccess {Object} picture Returns a picture.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       picture_id: 1,
+ *       url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
+ *       lat: "54.627389",
+ *       lon: "-122.500307"
+ *     }
+ *
+ * @apiError 404 User at :id not found.
+ * @apiError 404 Picture at :id not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "User at 1 not found"
+ *     }
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "Picture at 1 not found"
+ *     }
+ */
 
 router.delete("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;

@@ -7,7 +7,7 @@ const { suite, test } = require("mocha");
 const request = require("supertest");
 const server = require("../index");
 
-suite.only("search routes", () => {
+suite("search routes", () => {
   test("GET /search?lat&lon 'in Sydney'", done => {
     let lat = -33.86882;
     let lon = 151.209296;

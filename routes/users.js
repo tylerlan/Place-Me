@@ -16,11 +16,11 @@ const router = express.Router();
 let userController = new UserController();
 
 /**
- * @api {post} /signup Request User information
+ * @api {post} /signup POST signup
  * @apiVersion 1.0.0
  * @apiGroup Users
- * @apiSuccess {String} username Username of the User.
- * @apiSuccess {String} password  Password of the User.
+ * @apiSuccess {String} username Returns the username of the User.
+ * @apiSuccess {String} password  Returns the password of the User.
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
@@ -65,10 +65,10 @@ router.post("/signup", (req, res) => {
 });
 
 /**
- * @api {post} /login Request User information
+ * @api {post} /login POST login
  * @apiVersion 1.0.0
  * @apiGroup Users
- * @apiSuccess {String} payload  Payload of the User login info.
+ * @apiSuccess {String} payload  Returns the user login info.
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
@@ -119,7 +119,7 @@ router.post("/login", (req, res) => {
 });
 
 /**
- * @api {get} /users
+ * @api {get} /users GET users
  * @apiVersion 1.0.0
  * @apiGroup Users
  * @apiSuccess {String} users Returns all users.
@@ -146,7 +146,7 @@ router.get("/users", verifyToken, (req, res) => {
 });
 
 /**
- * @api {get} /users/:user_id Request user_id
+ * @api {get} /users/:user_id GET user
  * @apiVersion 1.0.0
  * @apiGroup Users
  * @apiSuccess {String} user  Returns a single user.
@@ -154,6 +154,13 @@ router.get("/users", verifyToken, (req, res) => {
  *     HTTP/1.1 200 OK
  *     {
  *        { user_id: 1, username: 'HarryPotter123' }
+ *     }
+ *
+ * @apiError 404 User at :id not found
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "User at 1 not found"
  *     }
  */
 
@@ -166,7 +173,6 @@ router.get("/users/:user_id", verifyToken, (req, res) => {
       if (!result) {
         return res.status(404).send(`User at ${searchedId} not found`);
       }
-      console.log(result);
       return res.status(200).json(result);
     })
     .catch(err => {
@@ -174,6 +180,25 @@ router.get("/users/:user_id", verifyToken, (req, res) => {
       res.sendStatus(500);
     });
 });
+
+/**
+ * @api {put} /users/:user_id UPDATE user
+ * @apiVersion 1.0.0
+ * @apiGroup Users
+ * @apiSuccess {String} user  Returns the updated user.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *        { user_id: 1, username: 'HarryPotter321' }
+ *     }
+ *
+ * @apiError 403 Username must be unique
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 403 Forbidden
+ *     {
+ *       "Username must be unique"
+ *     }
+ */
 
 router.put("/users/:user_id", verifyToken, (req, res) => {
   let searchedId = req.params.user_id;
@@ -209,6 +234,25 @@ router.put("/users/:user_id", verifyToken, (req, res) => {
   //   return res.status(200).json(result);
   // });
 });
+
+/**
+ * @api {delete} /users/:user_id DELETE user
+ * @apiVersion 1.0.0
+ * @apiGroup Users
+ * @apiSuccess {String} user  Returns the deleted user.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *        { user_id: 1, username: 'HarryPotter321' }
+ *     }
+ *
+ * @apiError 404 User at :id not found
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "User at 1 not found"
+ *     }
+ */
 
 router.delete("/users/:user_id", verifyToken, (req, res) => {
   let searchedId = req.params.user_id;

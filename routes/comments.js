@@ -15,6 +15,28 @@ const router = express.Router();
 
 let commentController = new CommentController();
 
+/**
+ * @api {get} /comments/:user_id GET user comments
+ * @apiVersion 1.0.0
+ * @apiGroup Comments
+ * @apiSuccess {Object[]} comments Comments of the user.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       comment_id: 1,
+ *       user_id: 1,
+ *       picture_id: 1,
+ *       comment: 'I love to code!'
+ *     }
+ *
+ * @apiError 404 This user hasn't commented or doesn't exist.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "This user hasn't commented or doesn't exist"
+ *     }
+ */
+
 router.get("/comments/:user_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
   let allUsersComments = commentController.getAllUsersComments(user_id);
@@ -31,6 +53,34 @@ router.get("/comments/:user_id", verifyToken, (req, res) => {
       res.sendStatus(500);
     });
 });
+
+/**
+ * @api {get} /comments/:user_id/:picture_id GET user comment on a picture
+ * @apiVersion 1.0.0
+ * @apiGroup Comments
+ * @apiSuccess {Object[]} comment User comment on a picture.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       comment_id: 1,
+ *       user_id: 1,
+ *       picture_id: 1,
+ *       comment: 'I love to code!'
+ *     }
+ *
+ * @apiError 404 Please enter a valid picture id.
+ * @apiError 404 Please enter a valid user id.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "Please enter a valid picture id"
+ *     }
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "Please enter a valid user id"
+ *     }
+ */
 
 router.get("/comments/:user_id/:picture_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
@@ -59,6 +109,33 @@ router.get("/comments/:user_id/:picture_id", verifyToken, (req, res) => {
       res.sendStatus(500);
     });
 });
+
+/**
+ * @api {post} /comments/:user_id POST comment
+ * @apiVersion 1.0.0
+ * @apiGroup Comments
+ * @apiSuccess {Object[]} comment Comment posted by the user.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       user_id: 1,
+ *       picture_id: 1,
+ *       comment: 'I love to code!'
+ *     }
+ *
+ * @apiError 404 User not found.
+ * @apiError 404 Please enter a valid picture id.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "User not found"
+ *     }
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "Please enter a valid picture id"
+ *     }
+ */
 
 router.post("/comments/:user_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
@@ -101,6 +178,40 @@ router.post("/comments/:user_id", verifyToken, (req, res) => {
       res.sendStatus(500);
     });
 });
+
+/**
+ * @api {delete} /comments/:user_id/:picture_id DELETE comment
+ * @apiVersion 1.0.0
+ * @apiGroup Comments
+ * @apiSuccess {Object[]} comment Deleted comment.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       comment_id: 1,
+ *       user_id: 1,
+ *       picture_id: 1,
+ *       comment: 'I love to code!'
+ *     }
+ *
+ * @apiError 404 User not found.
+ * @apiError 404 Picture not found.
+ * @apiError 404 Comment not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "User not found"
+ *     }
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "Picture not found"
+ *     }
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "Comment not found"
+ *     }
+ */
 
 router.delete("/comments/:user_id/:picture_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;

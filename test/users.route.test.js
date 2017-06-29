@@ -9,9 +9,9 @@ const request = require("supertest");
 const knex = require("../knex");
 const server = require("../index");
 
-suite("users route", () => {
+suite.only("users route", () => {
   test("POST /signup", done => {
-    const password = "youreawizard";
+    let password = "youreawizard";
 
     request(server)
       .post("/signup")
@@ -55,7 +55,7 @@ suite("users route", () => {
       });
   });
   test("POST /login", done => {
-    const password = "youreawizard";
+    let password = "youreawizard";
 
     request(server)
       .post("/login")
@@ -68,90 +68,181 @@ suite("users route", () => {
       .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
       .expect(200, {
         userId: 4,
-        username: "John"
+        username: "John",
+        loggedIn: true
       })
       .expect("Content-Type", /json/)
       .end(done);
   });
 
   test("GET /users", done => {
+    let agent = request.agent(server);
+    let password = "youreawizard";
+
     request(server)
-      .get("/users")
+      .post("/login")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(
-        200,
-        [
-          {
-            user_id: 3,
-            username: "Cornelius"
-          },
-          {
-            user_id: 4,
-            username: "John"
-          },
-          {
-            user_id: 1,
-            username: "Ronan"
-          },
-          {
-            user_id: 2,
-            username: "Tyler"
-          }
-        ],
-        done
-      );
+      .send({
+        username: "John",
+        password
+      })
+      .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
+      .expect(200, {
+        userId: 4,
+        username: "John",
+        loggedIn: true
+      })
+      .expect("Content-Type", /json/)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .get("/users")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(
+            200,
+            [
+              {
+                user_id: 3,
+                username: "Cornelius"
+              },
+              {
+                user_id: 4,
+                username: "John"
+              },
+              {
+                user_id: 1,
+                username: "Ronan"
+              },
+              {
+                user_id: 2,
+                username: "Tyler"
+              }
+            ],
+            done
+          );
+      });
   });
 
   test("GET /users/:user_id", done => {
+    let agent = request.agent(server);
+    let password = "youreawizard";
+
     request(server)
-      .get("/users/3")
+      .post("/login")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(
-        200,
-        [
-          {
-            user_id: 3,
-            username: "Cornelius"
-          }
-        ],
-        done
-      );
+      .send({
+        username: "John",
+        password
+      })
+      .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
+      .expect(200, {
+        userId: 4,
+        username: "John",
+        loggedIn: true
+      })
+      .expect("Content-Type", /json/)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .get("/users/3")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(
+            200,
+            [
+              {
+                user_id: 3,
+                username: "Cornelius"
+              }
+            ],
+            done
+          );
+      });
   });
 
   test("PUT /users/:user_id username", done => {
+    let agent = request.agent(server);
+    let password = "youreawizard";
+
     request(server)
-      .put("/users/3")
-      .send({ username: "CorneliusFudge" })
+      .post("/login")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(
-        200,
-        [
-          {
-            user_id: 3,
-            username: "CorneliusFudge"
-          }
-        ],
-        done
-      );
+      .send({
+        username: "John",
+        password
+      })
+      .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
+      .expect(200, {
+        userId: 4,
+        username: "John",
+        loggedIn: true
+      })
+      .expect("Content-Type", /json/)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        agent
+          .put("/users/3")
+          .send({ username: "CorneliusFudge" })
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(
+            200,
+            [
+              {
+                user_id: 3,
+                username: "CorneliusFudge"
+              }
+            ],
+            done
+          );
+      });
   });
 
   test("DELETE /users/:user_id", done => {
+    let agent = request.agent(server);
+    let password = "youreawizard";
+
     request(server)
-      .del("/users/3")
+      .post("/login")
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .expect(
-        200,
-        {
-          user_id: 3,
-          username: "CorneliusFudge"
-        },
-        done
-      );
-  });
+      .send({
+        username: "John",
+        password
+      })
+      .expect("set-cookie", /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=/)
+      .expect(200, {
+        userId: 4,
+        username: "John",
+        loggedIn: true
+      })
+      .expect("Content-Type", /json/)
+      .end((err, res) => {
+        if (err) return done(err);
 
-  //
+        agent
+          .del("/users/3")
+          .set("Accept", "application/json")
+          .set("Content-Type", "application/json")
+          .set("Cookie", res.headers["set-cookie"])
+          .expect(
+            200,
+            {
+              user_id: 3,
+              username: "CorneliusFudge"
+            },
+            done
+          );
+      });
+  });
 });

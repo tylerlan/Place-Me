@@ -9,6 +9,27 @@ const router = express.Router();
 
 let searchController = new SearchController();
 
+/**
+ * @api {get} /search GET Pictures request from API
+ * @apiVersion 1.0.0
+ * @apiGroup Search
+ * @apiSuccess {Object[]} pictures Returns array of picture objects.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       url: "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg",
+ *       lat: "54.627389",
+ *       lon: "-122.500307"
+ *     }
+ *
+ * @apiError 400 Search requires both latitude and longetude.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "Search requires both latitude and longetude"
+ *     }
+ */
+
 router.get("/search", (req, res) => {
   let lat = req.query.lat;
   let lon = req.query.lon;
@@ -26,6 +47,7 @@ router.get("/search", (req, res) => {
       return searchController.generateObjects(picArray, lat, lon);
     })
     .then(outputArray => {
+      console.log(outputArray);
       res.status(200).json(outputArray);
       return;
     })

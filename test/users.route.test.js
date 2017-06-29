@@ -9,7 +9,7 @@ const request = require("supertest");
 const knex = require("../knex");
 const server = require("../index");
 
-suite.only("users route", () => {
+suite("users route", () => {
   test("POST /signup", done => {
     let password = "youreawizard";
 

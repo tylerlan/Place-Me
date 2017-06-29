@@ -15,6 +15,27 @@ const router = express.Router();
 
 let userController = new UserController();
 
+/**
+ * @api {post} /signup Request User information
+ * @apiVersion 1.0.0
+ * @apiGroup Users
+ * @apiSuccess {String} username Username of the User.
+ * @apiSuccess {String} password  Password of the User.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       username: "HarryPotter123",
+ *       password: "youreawizard"
+ *     }
+ *
+ * @apiError 400 Username already exists
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "Username already exists"
+ *     }
+ */
+
 router.post("/signup", (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
@@ -43,6 +64,26 @@ router.post("/signup", (req, res) => {
   });
 });
 
+/**
+ * @api {post} /login Request User information
+ * @apiVersion 1.0.0
+ * @apiGroup Users
+ * @apiSuccess {String} payload  Payload of the User login info.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       userId: 1,
+ *       username: "HarryPotter123"
+ *     }
+ *
+ * @apiError 400 Bad username or password
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "Bad username or password"
+ *     }
+ */
+
 router.post("/login", (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
@@ -51,7 +92,7 @@ router.post("/login", (req, res) => {
     .getByUsername(username)
     .then(result => {
       if (!result) {
-        return res.status(404).send("Bad username or password");
+        return res.status(400).send("Bad username or password");
       }
       const userData = result[0];
 
@@ -77,6 +118,21 @@ router.post("/login", (req, res) => {
     });
 });
 
+/**
+ * @api {get} /users
+ * @apiVersion 1.0.0
+ * @apiGroup Users
+ * @apiSuccess {String} users Returns all users.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *        { user_id: 1, username: 'HarryPotter123' },
+ *        { user_id: 2, username: 'RonWeasley123' },
+ *        { user_id: 3, username: 'HermoineGranger123' },
+ *        { user_id: 4, username: 'DracoMalfoy123' }
+ *     }
+ */
+
 router.get("/users", verifyToken, (req, res) => {
   let allUsers = userController.getAllUsers();
   allUsers
@@ -89,6 +145,18 @@ router.get("/users", verifyToken, (req, res) => {
     });
 });
 
+/**
+ * @api {get} /users/:user_id Request user_id
+ * @apiVersion 1.0.0
+ * @apiGroup Users
+ * @apiSuccess {String} user  Returns a single user.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *        { user_id: 1, username: 'HarryPotter123' }
+ *     }
+ */
+
 router.get("/users/:user_id", verifyToken, (req, res) => {
   let searchedId = req.params.user_id;
   let singleUser = userController.getById(searchedId);
@@ -98,6 +166,7 @@ router.get("/users/:user_id", verifyToken, (req, res) => {
       if (!result) {
         return res.status(404).send(`User at ${searchedId} not found`);
       }
+      console.log(result);
       return res.status(200).json(result);
     })
     .catch(err => {

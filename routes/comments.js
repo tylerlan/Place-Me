@@ -6,13 +6,16 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+
+const verifyToken = require("./verify-token");
+
 const CommentController = require("../controller/Comments");
 
 const router = express.Router();
 
 let commentController = new CommentController();
 
-router.get("/comments/:user_id", (req, res) => {
+router.get("/comments/:user_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
   let allUsersComments = commentController.getAllUsersComments(user_id);
 
@@ -29,7 +32,7 @@ router.get("/comments/:user_id", (req, res) => {
     });
 });
 
-router.get("/comments/:user_id/:picture_id", (req, res) => {
+router.get("/comments/:user_id/:picture_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
   let picture_id = req.params.picture_id;
   let allUsersComments = commentController.getAllUsersComments(user_id);
@@ -57,7 +60,7 @@ router.get("/comments/:user_id/:picture_id", (req, res) => {
     });
 });
 
-router.post("/comments/:user_id", (req, res) => {
+router.post("/comments/:user_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
   let commentObj = req.body;
   commentObj.user_id = user_id;
@@ -99,7 +102,7 @@ router.post("/comments/:user_id", (req, res) => {
     });
 });
 
-router.delete("/comments/:user_id/:picture_id", (req, res) => {
+router.delete("/comments/:user_id/:picture_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
   let picture_id = req.params.picture_id;
   let commentToDelete = commentController.getCommentByIds(user_id, picture_id);

@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+
+const verifyToken = require("./verify-token");
+
 const PictureController = require("../controller/Pictures");
 
 const router = express.Router();
@@ -25,7 +28,7 @@ router.get("/pictures", (req, res) => {
     });
 });
 
-router.get("/pictures/:user_id", (req, res) => {
+router.get("/pictures/:user_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
 
   pictureController.getAllUsersFavorites(user_id).then(usersFavorites => {
@@ -36,7 +39,7 @@ router.get("/pictures/:user_id", (req, res) => {
   });
 });
 
-router.get("/pictures/:user_id/:picture_id", (req, res) => {
+router.get("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
   let picture_id = req.params.picture_id;
   let checkForPicture = pictureController.checkIfUserHasFavorite(user_id);
@@ -59,12 +62,11 @@ router.get("/pictures/:user_id/:picture_id", (req, res) => {
             });
         }
       });
-      // res.status(404).send(`Picture at ${picture_id} not found`);
     }
   });
 });
 
-router.post("/pictures/:user_id", (req, res) => {
+router.post("/pictures/:user_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
   let pictureObj = req.body;
   let checkUserForPicture = pictureController.checkIfUserHasFavorite(user_id);
@@ -106,7 +108,7 @@ router.post("/pictures/:user_id", (req, res) => {
     });
 });
 
-router.delete("/pictures/:user_id/:picture_id", (req, res) => {
+router.delete("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
   let user_id = req.params.user_id;
   let picture_id = req.params.picture_id;
   let checkUserForPicture = pictureController.checkIfUserHasFavorite(user_id);

@@ -6,16 +6,14 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+
 const UserController = require("../controller/Users");
+
+const verifyToken = require("./verify-token");
 
 const router = express.Router();
 
 let userController = new UserController();
-
-// router.use((req, res, next) => {
-//   console.log("verify the shit");
-//   next();
-// });
 
 router.post("/signup", (req, res) => {
   let username = req.body.username;
@@ -59,15 +57,13 @@ router.post("/login", (req, res) => {
 
       let payload = {
         userId: userData.user_id,
-        username: userData.username
+        username: userData.username,
+        loggedIn: true
       };
 
       bcrypt.compare(password, userData.hashed_password).then(result => {
         if (!result) {
-          return res
-            .status(400)
-            .set("Content-Type", "text/plain")
-            .send("Bad username or password");
+          return res.status(400).set("Content-Type", "text/plain").send("Bad username or password");
         }
 
         let secret = process.env.JWT_KEY;
@@ -81,7 +77,7 @@ router.post("/login", (req, res) => {
     });
 });
 
-router.get("/users", (req, res) => {
+router.get("/users", verifyToken, (req, res) => {
   let allUsers = userController.getAllUsers();
   allUsers
     .then(result => {
@@ -93,7 +89,7 @@ router.get("/users", (req, res) => {
     });
 });
 
-router.get("/users/:user_id", (req, res) => {
+router.get("/users/:user_id", verifyToken, (req, res) => {
   let searchedId = req.params.user_id;
   let singleUser = userController.getById(searchedId);
 
@@ -110,7 +106,7 @@ router.get("/users/:user_id", (req, res) => {
     });
 });
 
-router.put("/users/:user_id", (req, res) => {
+router.put("/users/:user_id", verifyToken, (req, res) => {
   let searchedId = req.params.user_id;
   let { username, currentPassword, newPassword } = req.body; // User has to KNOW, and manually input their current plaintext password...and also enter a plaintext new password
 
@@ -145,7 +141,7 @@ router.put("/users/:user_id", (req, res) => {
   // });
 });
 
-router.delete("/users/:user_id", (req, res) => {
+router.delete("/users/:user_id", verifyToken, (req, res) => {
   let searchedId = req.params.user_id;
   let deletedUser;
 
@@ -196,17 +192,5 @@ function updateUsername(res, username, searchedId) {
     });
 }
 //
-// Make verifyToken into a middleware (and move it to another module)
-function verifyToken(token) {
-  if (token) {
-    jwt.verify(token, process.env.JWT_TOKEN, (err, decoded) => {
-      if (err) {
-        console.log("VERIFICATION ERROR:", err);
-        return res.sendStatus(401);
-      }
-      return decoded;
-    });
-  }
-}
 
 module.exports = router;

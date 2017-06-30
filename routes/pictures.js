@@ -31,7 +31,7 @@ let pictureController = new PictureController();
  *     }]
  */
 
-router.get("/pictures", (req, res) => {
+router.get("/pictures", (req, res, next) => {
   let allPictures = pictureController.getAllPictures();
 
   allPictures
@@ -39,8 +39,7 @@ router.get("/pictures", (req, res) => {
       res.status(200).json(multiPicturesData);
     })
     .catch(err => {
-      console.log("ERROR:", err);
-      res.sendStatus(500);
+      next(err);
     });
 });
 
@@ -101,7 +100,7 @@ router.get("/pictures/:user_id", verifyToken, (req, res) => {
  *     }
  */
 
-router.get("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
+router.get("/pictures/:user_id/:picture_id", verifyToken, (req, res, next) => {
   let user_id = req.params.user_id;
   let picture_id = req.params.picture_id;
   let checkForPicture = pictureController.checkIfUserHasFavorite(user_id);
@@ -119,8 +118,7 @@ router.get("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
               return;
             })
             .catch(err => {
-              console.log("ERROR:", err);
-              res.sendStatus(500);
+              next(err);
             });
         }
       });
@@ -151,7 +149,7 @@ router.get("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
  *     }
  */
 
-router.post("/pictures/:user_id", verifyToken, (req, res) => {
+router.post("/pictures/:user_id", verifyToken, (req, res, next) => {
   let user_id = req.params.user_id;
   let pictureObj = req.body;
   let checkUserForPicture = pictureController.checkIfUserHasFavorite(user_id);
@@ -177,19 +175,16 @@ router.post("/pictures/:user_id", verifyToken, (req, res) => {
                 });
               })
               .catch(err => {
-                console.log("ERROR:", err);
-                res.sendStatus(500);
+                next(err);
               });
           }
         })
         .catch(err => {
-          console.log("ERROR:", err);
-          res.sendStatus(500);
+          next(err);
         });
     })
     .catch(err => {
-      console.log("ERROR:", err);
-      res.sendStatus(500);
+      next(err);
     });
 });
 
@@ -222,7 +217,7 @@ router.post("/pictures/:user_id", verifyToken, (req, res) => {
  *     }
  */
 
-router.delete("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
+router.delete("/pictures/:user_id/:picture_id", verifyToken, (req, res, next) => {
   let user_id = req.params.user_id;
   let picture_id = req.params.picture_id;
   let checkUserForPicture = pictureController.checkIfUserHasFavorite(user_id);
@@ -233,20 +228,24 @@ router.delete("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
     picture_id
   );
 
-  checkUserForPicture.then(result => {
-    if (result.length === 0) {
-      return res.status(404).send(`User at ${user_id} not found`);
-    }
-    pathPictureToDelete.then(result => {
-      pictureToDelete = result;
-    });
-    deletePictureFromFavorites.then(result => {
-      if (result > 0) {
-        return res.status(200).json(pictureToDelete);
+  checkUserForPicture
+    .then(result => {
+      if (result.length === 0) {
+        return res.status(404).send(`User at ${user_id} not found`);
       }
-      return res.status(404).send(`Picture at ${picture_id} not found`);
+      pathPictureToDelete.then(result => {
+        pictureToDelete = result;
+      });
+      deletePictureFromFavorites.then(result => {
+        if (result > 0) {
+          return res.status(200).json(pictureToDelete);
+        }
+        return res.status(404).send(`Picture at ${picture_id} not found`);
+      });
+    })
+    .catch(err => {
+      next(err);
     });
-  });
 });
 
 module.exports = router;

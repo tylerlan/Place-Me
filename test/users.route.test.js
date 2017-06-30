@@ -243,6 +243,28 @@ suite("users route", () => {
       });
   });
 
+  // test("PUT /users/:user_id 'username must be unique'", done => {
+  //   request(server)
+  //     .post("/login")
+  //     .set("Accept", "application/json")
+  //     .set("Content-Type", "application/json")
+  //     .send({
+  //       username: "John",
+  //       password
+  //     })
+  //     .end((err, res) => {
+  //       if (err) return done(err);
+  //
+  //       agent
+  //         .put("/users/4")
+  //         .send({ username: "Ronan" })
+  //         .set("Accept", "application/json")
+  //         .set("Content-Type", "application/json")
+  //         .set("Cookie", res.headers["set-cookie"])
+  //         .expect(403, "Username must be unique", done);
+  //     });
+  // });
+
   test("DELETE /users/:user_id", done => {
     request(server)
       .post("/login")

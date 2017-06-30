@@ -37,7 +37,7 @@ let userController = new UserController();
  *     }
  */
 
-router.post("/signup", (req, res) => {
+router.post("/signup", (req, res, next) => {
   let username = req.body.username;
   let password = req.body.password;
 
@@ -59,8 +59,7 @@ router.post("/signup", (req, res) => {
         res.status(201).json(newEntry);
       })
       .catch(err => {
-        console.log("ERROR:", err);
-        res.sendStatus(500);
+        next(err);
       });
   });
 });
@@ -86,7 +85,7 @@ router.post("/signup", (req, res) => {
  *     }
  */
 
-router.post("/login", (req, res) => {
+router.post("/login", (req, res, next) => {
   let username = req.body.username;
   let password = req.body.password;
 
@@ -115,8 +114,7 @@ router.post("/login", (req, res) => {
       });
     })
     .catch(err => {
-      console.log("ERROR:", err);
-      res.sendStatus(500);
+      next(err);
     });
 });
 
@@ -136,15 +134,14 @@ router.post("/login", (req, res) => {
  *     }
  */
 
-router.get("/users", verifyToken, (req, res) => {
+router.get("/users", verifyToken, (req, res, next) => {
   let allUsers = userController.getAllUsers();
   allUsers
     .then(result => {
       return res.status(200).json(result);
     })
     .catch(err => {
-      console.log("ERROR:", err);
-      res.sendStatus(500);
+      next(err);
     });
 });
 
@@ -168,7 +165,7 @@ router.get("/users", verifyToken, (req, res) => {
  *     }
  */
 
-router.get("/users/:user_id", verifyToken, (req, res) => {
+router.get("/users/:user_id", verifyToken, (req, res, next) => {
   let searchedId = req.params.user_id;
   let singleUser = userController.getById(searchedId);
 
@@ -180,8 +177,7 @@ router.get("/users/:user_id", verifyToken, (req, res) => {
       return res.status(200).json(result);
     })
     .catch(err => {
-      console.log("ERROR:", err);
-      res.sendStatus(500);
+      next(err);
     });
 });
 
@@ -235,7 +231,7 @@ router.put("/users/:user_id", verifyToken, (req, res) => {
  *     }
  */
 
-router.delete("/users/:user_id", verifyToken, (req, res) => {
+router.delete("/users/:user_id", verifyToken, (req, res, next) => {
   let searchedId = req.params.user_id;
   let deletedUser;
 
@@ -252,8 +248,7 @@ router.delete("/users/:user_id", verifyToken, (req, res) => {
       res.send(deletedUser);
     })
     .catch(err => {
-      console.log("ERROR:", err);
-      res.sendStatus(500);
+      next(err);
     });
 });
 

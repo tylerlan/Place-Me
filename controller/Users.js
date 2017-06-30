@@ -62,8 +62,7 @@ class UserController {
         });
       })
       .catch(err => {
-        console.log("ERROR:", err);
-        res.sendStatus(500);
+        next(err);
       });
   }
 }

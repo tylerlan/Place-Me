@@ -17,6 +17,7 @@ let userController = new UserController();
 
 /**
  * @api {post} /signup POST signup
+ * @apiPermission none
  * @apiVersion 1.0.0
  * @apiGroup Users
  * @apiSuccess {String} username Returns the username of the User.
@@ -66,6 +67,7 @@ router.post("/signup", (req, res) => {
 
 /**
  * @api {post} /login POST login
+ * @apiPermission none
  * @apiVersion 1.0.0
  * @apiGroup Users
  * @apiSuccess {String} payload  Returns the user login info.
@@ -120,6 +122,7 @@ router.post("/login", (req, res) => {
 
 /**
  * @api {get} /users GET users
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Users
  * @apiSuccess {String} users Returns all users.
@@ -147,6 +150,7 @@ router.get("/users", verifyToken, (req, res) => {
 
 /**
  * @api {get} /users/:user_id GET user
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Users
  * @apiSuccess {String} user  Returns a single user.
@@ -183,6 +187,7 @@ router.get("/users/:user_id", verifyToken, (req, res) => {
 
 /**
  * @api {put} /users/:user_id UPDATE user
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Users
  * @apiSuccess {String} user  Returns the updated user.
@@ -237,6 +242,7 @@ router.put("/users/:user_id", verifyToken, (req, res) => {
 
 /**
  * @api {delete} /users/:user_id DELETE user
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Users
  * @apiSuccess {String} user  Returns the deleted user.

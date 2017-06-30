@@ -11,6 +11,7 @@ let searchController = new SearchController();
 
 /**
  * @api {get} /search GET Pictures request from API
+ * @apiPermission none
  * @apiVersion 1.0.0
  * @apiGroup Search
  * @apiSuccess {Object[]} pictures Returns array of picture objects.

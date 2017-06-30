@@ -17,6 +17,7 @@ let pictureController = new PictureController();
 
 /**
  * @api {get} /pictures GET All pictures
+ * @apiPermission none
  * @apiVersion 1.0.0
  * @apiGroup Pictures
  * @apiSuccess {Object[]} pictures Returns all pictures.
@@ -45,6 +46,7 @@ router.get("/pictures", (req, res) => {
 
 /**
  * @api {get} /pictures/:user_id GET Users pictures
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Pictures
  * @apiSuccess {Object[]} pictures Returns users pictures.
@@ -78,6 +80,7 @@ router.get("/pictures/:user_id", verifyToken, (req, res) => {
 
 /**
  * @api {get} /pictures/:user_id/:picture_id GET Users pictures
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Pictures
  * @apiSuccess {Object} picture Returns a picture.
@@ -127,6 +130,7 @@ router.get("/pictures/:user_id/:picture_id", verifyToken, (req, res) => {
 
 /**
  * @api {post} /pictures/:user_id POST Picture to user favorites
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Pictures
  * @apiSuccess {Object} picture Returns a picture.
@@ -191,6 +195,7 @@ router.post("/pictures/:user_id", verifyToken, (req, res) => {
 
 /**
  * @api {delete} /pictures/:user_id/:picture_id DELETE Picture from favorites
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Pictures
  * @apiSuccess {Object} picture Returns a picture.

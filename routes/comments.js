@@ -17,6 +17,7 @@ let commentController = new CommentController();
 
 /**
  * @api {get} /comments/:user_id GET user comments
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Comments
  * @apiSuccess {Object[]} comments Comments of the user.
@@ -56,6 +57,7 @@ router.get("/comments/:user_id", verifyToken, (req, res) => {
 
 /**
  * @api {get} /comments/:user_id/:picture_id GET user comment on a picture
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Comments
  * @apiSuccess {Object[]} comment User comment on a picture.
@@ -112,6 +114,7 @@ router.get("/comments/:user_id/:picture_id", verifyToken, (req, res) => {
 
 /**
  * @api {post} /comments/:user_id POST comment
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Comments
  * @apiSuccess {Object[]} comment Comment posted by the user.
@@ -181,6 +184,7 @@ router.post("/comments/:user_id", verifyToken, (req, res) => {
 
 /**
  * @api {delete} /comments/:user_id/:picture_id DELETE comment
+ * @apiPermission readwrite
  * @apiVersion 1.0.0
  * @apiGroup Comments
  * @apiSuccess {Object[]} comment Deleted comment.

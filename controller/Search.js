@@ -59,6 +59,4 @@ class SearchController {
   // }
 }
 
-//NEED TO WRITE UNIT TESTS
-
 module.exports = SearchController;

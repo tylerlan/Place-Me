@@ -291,5 +291,4 @@ suite("users route", () => {
           .expect(404, "User at 20 not found", done);
       });
   });
-  //
 });

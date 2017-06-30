@@ -9,5 +9,8 @@ module.exports = {
     client: "pg",
     connection: "postgres://localhost/place_me_test"
   },
-  production: {}
+  production: {
+    client: "pg",
+    connection: process.env.DATABASE_URL
+  }
 };

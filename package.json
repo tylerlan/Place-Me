@@ -12,7 +12,8 @@
     "setupTestEnv": "knex migrate:rollback --env test && knex migrate:latest --env test && knex seed:run --env test",
     "dev": "nodemon index.js",
     "coverage": "NODE_ENV=test npm run setupTestEnv && istanbul cover _mocha -- -R spec",
-    "test": "npm run setupTestEnv && mocha"
+    "test": "npm run setupTestEnv && mocha",
+    "heroku-postbuild": "knex migrate:latest"
   },
   "repository": {
     "type": "git",
